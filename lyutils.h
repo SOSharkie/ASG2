@@ -28,6 +28,7 @@ int yyparse();
 void yyerror (const char* message);
 
 struct lexer {
+   static FILE* tokOut;
    static bool interactive;
    static location lloc;
    static size_t last_yyleng;

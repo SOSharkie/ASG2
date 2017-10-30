@@ -11,6 +11,7 @@
 
 bool lexer::interactive = true;
 location lexer::lloc = {0, 1, 0};
+FILE* lexer::tokOut;
 size_t lexer::last_yyleng = 0;
 vector<string> lexer::filenames;
 
@@ -63,6 +64,7 @@ void lexer::include() {
    if (scan_rc != 2) {
       errprintf ("%s: invalid directive, ignored\n", yytext);
    }else {
+      fprintf(lexer::tokOut, "%s\n", yytext);
       if (yy_flex_debug) {
          fprintf (stderr, "--included # %zd \"%s\"\n",
                   linenr, filename);

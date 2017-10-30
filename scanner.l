@@ -3,11 +3,16 @@
 %{
 
 #include "lyutils.h"
+#include "auxlib.h"
 
 #define YY_USER_ACTION  { lexer::advance(); }
 
 int yylval_token (int symbol) {
    yylval = new astree (symbol, lexer::lloc, yytext);
+
+    fprintf(lexer::tokOut, "  %-2zd %zd.%-2zd %-4d %-10s (%s)\n", 
+    	lexer::lloc.filenr, lexer::lloc.linenr, lexer::lloc.offset, symbol, parser::get_tname (symbol), yytext);
+
    return symbol;
 }
 
