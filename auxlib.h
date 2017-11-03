@@ -1,4 +1,6 @@
 // $Id: auxlib.h,v 1.10 2017-10-11 14:33:32-07 - - $
+// Sean Odnert sodnert@ucsc.edu
+// Mark Hiserodt mhiserod@ucsc.edu
 
 #ifndef __AUXLIB_H__
 #define __AUXLIB_H__

@@ -79,9 +79,10 @@ int main (int argc, char** argv) {
       fprintf (stderr, "%s: %s: %s\n",
                execname, command.c_str(), strerror (errno));
    } else {
-      string tokfilename = filestart + filemiddle.substr(0, filemiddle.length()-3) + tokending;
+      string tokfilename = (filestart + 
+         filemiddle.substr(0, filemiddle.length()-3) + tokending);
       lexer::tokOut = fopen(tokfilename.c_str(), "w+");
-      for (int i = 0; yylex() != 0; i++){
+      while (yylex() != 0){
          string_set::intern(yytext);
       }  
       int pclose_rc = pclose (yyin);
@@ -89,7 +90,8 @@ int main (int argc, char** argv) {
       if (pclose_rc != 0) exit_status = EXIT_FAILURE;
    }
    
-   string strfilename = filestart + filemiddle.substr(0, filemiddle.length()-3) + strending;
+   string strfilename = filestart + 
+      filemiddle.substr(0, filemiddle.length()-3) + strending;
    FILE* strFile = fopen(strfilename.c_str(), "w+");
    if (strFile == nullptr) {
       exit_status = EXIT_FAILURE;

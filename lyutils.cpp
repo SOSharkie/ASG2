@@ -1,4 +1,6 @@
 // $Id: lyutils.cpp,v 1.11 2016-10-06 16:42:53-07 - - $
+// Sean Odnert sodnert@ucsc.edu
+// Mark Hiserodt mhiserod@ucsc.edu
 
 #include <assert.h>
 #include <ctype.h>

@@ -1,6 +1,8 @@
 %{
 // $Id: parser.y,v 1.11 2017-10-11 14:27:30-07 - - $
 // Dummy parser for scanner project.
+// Sean Odnert sodnert@ucsc.edu
+// Mark Hiserodt mhiserod@ucsc.edu
 
 #include <cassert>
 

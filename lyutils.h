@@ -1,4 +1,6 @@
 // $Id: lyutils.h,v 1.11 2017-10-11 14:19:04-07 - - $
+// Sean Odnert sodnert@ucsc.edu
+// Mark Hiserodt mhiserod@ucsc.edu
 
 #ifndef __UTILS_H__
 #define __UTILS_H__
