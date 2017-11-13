@@ -1,4 +1,4 @@
-// $Id: cppstrtok.cpp,v 1.8 2017-10-15 - -$
+// $Id: main.cpp,v 1.8 2017-10-15 - -$
 // Sean Odnert sodnert@ucsc.edu
 // Mark Hiserodt mhiserod@ucsc.edu
 
@@ -22,6 +22,7 @@ using namespace std;
 #include "lyutils.h"
 #include "auxlib.h"
 #include "string_set.h"
+#include "astree.h"
 
 const string CPP = "/usr/bin/cpp -nostdinc";
 constexpr size_t LINESIZE = 1024;
@@ -73,35 +74,46 @@ int main (int argc, char** argv) {
    string filemiddle = execname;
    string strending = ".str";
    string tokending = ".tok";
+   string astending = ".ast";
 
    if (yyin == nullptr) {
       exit_status = EXIT_FAILURE;
       fprintf (stderr, "%s: %s: %s\n",
                execname, command.c_str(), strerror (errno));
    } else {
-      string tokfilename = (filestart + 
-         filemiddle.substr(0, filemiddle.length()-3) + tokending);
+
+      //------------------ parse and dump the tokens ------------------
+      string tokfilename = filestart + 
+         filemiddle.substr(0, filemiddle.length()-3) + tokending;
       lexer::tokOut = fopen(tokfilename.c_str(), "w+");
-      while (yylex() != 0){
-         string_set::intern(yytext);
-      }  
-      int pclose_rc = pclose (yyin);
-      eprint_status (command.c_str(), pclose_rc);
-      if (pclose_rc != 0) exit_status = EXIT_FAILURE;
-   }
-   
-   string strfilename = filestart + 
-      filemiddle.substr(0, filemiddle.length()-3) + strending;
-   FILE* strFile = fopen(strfilename.c_str(), "w+");
-   if (strFile == nullptr) {
-      exit_status = EXIT_FAILURE;
-      fprintf (stderr, "%s: %s: %s\n",
-            execname, strfilename.c_str(), strerror (errno));
-   } else {
+
+      // while (yylex() != 0){
+      //    string_set::intern(yytext);
+      // }  
+      yyparse();
+
+      int pclose_tok = pclose (yyin);
+      eprint_status (command.c_str(), pclose_tok);
+      if (pclose_tok != 0) exit_status = EXIT_FAILURE;
+
+      //-------------------- dump the string set --------------------
+      string strfilename = filestart + 
+         filemiddle.substr(0, filemiddle.length()-3) + strending;
+      FILE* strFile = fopen(strfilename.c_str(), "w+");
       string_set::dump(strFile);
       int pclose_out = fclose (strFile);
       eprint_status (strfilename.c_str(), pclose_out);
       if (pclose_out != 0) exit_status = EXIT_FAILURE;
+
+      //-------------------- dump the astree --------------------
+      string astfilename = filestart + 
+         filemiddle.substr(0, filemiddle.length()-3) + astending;
+      FILE* astFile = fopen(astfilename.c_str(), "w+");
+      astree::dump(astFile, parser::root);
+      int pclose_ast = fclose (strFile);
+      eprint_status (strfilename.c_str(), pclose_ast);
+      if (pclose_ast != 0) exit_status = EXIT_FAILURE;
+
    }
    return exit_status;
 }
