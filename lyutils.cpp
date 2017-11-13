@@ -53,6 +53,12 @@ void lexer::badchar (unsigned char bad) {
                   buffer);
 }
 
+astree* new_parseroot(){
+   parser::root = new astree (TOK_ROOT, {0, 0, 0}, "<<TOK_ROOT>>");
+   fprintf(stdout, "this is a newparseroot test\n");
+   return parser::root;
+}
+
 
 void lexer::badtoken (char* lexeme) {
    errllocprintf (lexer::lloc, "invalid token (%s)\n", lexeme);

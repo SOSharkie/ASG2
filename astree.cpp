@@ -34,14 +34,25 @@ astree::~astree() {
 }
 
 astree* astree::adopt (astree* child1, astree* child2) {
-   if (child1 != nullptr) children.push_back (child1);
-   if (child2 != nullptr) children.push_back (child2);
+   if (child1 != nullptr) {
+      fprintf(stdout, "child1 not null");
+      children.push_back (child1);
+   }
+   if (child2 != nullptr) {
+      fprintf(stdout, "child2 not null");
+      children.push_back (child2);
+   }
    return this;
 }
 
 astree* astree::adopt_sym (astree* child, int symbol_) {
    symbol = symbol_;
    return adopt (child);
+}
+
+astree* astree::swap_sym (astree* root, int symbol){
+   root->symbol = symbol;
+   return root;
 }
 
 

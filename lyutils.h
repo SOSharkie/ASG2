@@ -29,6 +29,8 @@ int yylex_destroy();
 int yyparse();
 void yyerror (const char* message);
 
+astree* new_parseroot();
+
 struct lexer {
    static FILE* tokOut;
    static bool interactive;
