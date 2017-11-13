@@ -44,7 +44,7 @@
 %%
 
 start       : program 
-              { $$ = new_parseroot(); }
+              { parser::root = $1; }
             ;
 
 program     : program structdef 

@@ -35,11 +35,9 @@ astree::~astree() {
 
 astree* astree::adopt (astree* child1, astree* child2) {
    if (child1 != nullptr) {
-      fprintf(stdout, "child1 not null");
       children.push_back (child1);
    }
    if (child2 != nullptr) {
-      fprintf(stdout, "child2 not null");
       children.push_back (child2);
    }
    return this;
@@ -80,9 +78,16 @@ void astree::dump (FILE* outfile, astree* tree) {
 }
 
 void astree::print (FILE* outfile, astree* tree, int depth) {
-   fprintf (outfile, "; %*s", depth * 3, "");
+   const char* tname = parser::get_tname (tree->symbol);
+   if (strstr (tname, "TOK_") == tname) tname += 4;
+
+   for (int i = 0; i < depth; i++){
+      fprintf(outfile, "|   ");
+   }
+
+   //fprintf (outfile, "|%*s", depth * 3, "");
    fprintf (outfile, "%s \"%s\" (%zd.%zd.%zd)\n",
-            parser::get_tname (tree->symbol), tree->lexinfo->c_str(),
+            tname, tree->lexinfo->c_str(),
             tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
    for (astree* child: tree->children) {
       astree::print (outfile, child, depth + 1);

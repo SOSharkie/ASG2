@@ -109,7 +109,7 @@ int main (int argc, char** argv) {
       string astfilename = filestart + 
          filemiddle.substr(0, filemiddle.length()-3) + astending;
       FILE* astFile = fopen(astfilename.c_str(), "w+");
-      astree::dump(astFile, parser::root);
+      astree::print(astFile, parser::root);
       int pclose_ast = fclose (strFile);
       eprint_status (strfilename.c_str(), pclose_ast);
       if (pclose_ast != 0) exit_status = EXIT_FAILURE;

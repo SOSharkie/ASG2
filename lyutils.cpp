@@ -54,8 +54,7 @@ void lexer::badchar (unsigned char bad) {
 }
 
 astree* new_parseroot(){
-   parser::root = new astree (TOK_ROOT, {0, 0, 0}, "<<TOK_ROOT>>");
-   fprintf(stdout, "this is a newparseroot test\n");
+   parser::root = new astree (TOK_ROOT, {lexer::lloc.filenr, 0, 0}, "");
    return parser::root;
 }
 
