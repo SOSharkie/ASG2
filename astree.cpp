@@ -1,4 +1,4 @@
-// $Id: astree.cpp,v 1.9 2017-10-04 15:59:50-07 - - $
+// $Id: astree.cpp,v 1.9 2017-11-16 - - $
 // Sean Odnert sodnert@ucsc.edu
 // Mark Hiserodt mhiserod@ucsc.edu
 
@@ -12,11 +12,14 @@
 #include "astree.h"
 #include "string_set.h"
 #include "lyutils.h"
+#include "symtable.h"
 
 astree::astree (int symbol_, const location& lloc_, const char* info) {
    symbol = symbol_;
    lloc = lloc_;
    lexinfo = string_set::intern (info);
+   attributes = 0;
+   blocknr = 0;
    // vector defaults to empty -- no children
 }
 
@@ -85,7 +88,6 @@ void astree::print (FILE* outfile, astree* tree, int depth) {
       fprintf(outfile, "|   ");
    }
 
-   //fprintf (outfile, "|%*s", depth * 3, "");
    fprintf (outfile, "%s \"%s\" (%zd.%zd.%zd)\n",
             tname, tree->lexinfo->c_str(),
             tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);

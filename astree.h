@@ -1,4 +1,4 @@
-// $Id: astree.h,v 1.7 2016-10-06 16:13:39-07 - - $
+// $Id: astree.h,v 1.7 2017-11-16 - - $
 // Sean Odnert sodnert@ucsc.edu
 // Mark Hiserodt mhiserod@ucsc.edu
 
@@ -10,6 +10,8 @@
 using namespace std;
 
 #include "auxlib.h"
+#include "symtable.h"
+using attr_bitset = bitset<17>;
 
 struct location {
    size_t filenr;
@@ -24,6 +26,8 @@ struct astree {
    location lloc;            // source location
    const string* lexinfo;    // pointer to lexical information
    vector<astree*> children; // children of this n-way node
+   attr_bitset attributes;
+   int blocknr;
 
    // Functions.
    astree (int symbol, const location&, const char* lexinfo);

@@ -1,10 +1,6 @@
-// $Id: main.cpp,v 1.8 2017-10-15 - -$
+// $Id: main.cpp,v 1.8 2017-11-16 - -$
 // Sean Odnert sodnert@ucsc.edu
 // Mark Hiserodt mhiserod@ucsc.edu
-
-// Use cpp to scan a file and print line numbers.
-// Print out each input line read in, then strtok it for
-// tokens.
 
 #include <string>
 #include <vector>
@@ -23,6 +19,7 @@ using namespace std;
 #include "auxlib.h"
 #include "string_set.h"
 #include "astree.h"
+#include "symtable.h"
 
 const string CPP = "/usr/bin/cpp -nostdinc";
 constexpr size_t LINESIZE = 1024;
@@ -75,6 +72,7 @@ int main (int argc, char** argv) {
    string strending = ".str";
    string tokending = ".tok";
    string astending = ".ast";
+   string symending = ".sym";
 
    if (yyin == nullptr) {
       exit_status = EXIT_FAILURE;
@@ -86,14 +84,16 @@ int main (int argc, char** argv) {
       string tokfilename = filestart + 
          filemiddle.substr(0, filemiddle.length()-3) + tokending;
       lexer::tokOut = fopen(tokfilename.c_str(), "w+");
+ 
+      int parse_code = yyparse();
+      if (parse_code == 1) exit_status = EXIT_FAILURE;
 
-      // while (yylex() != 0){
-      //    string_set::intern(yytext);
-      // }  
-      yyparse();
+      int pclose_rc = pclose (yyin);
+      eprint_status (command.c_str(), pclose_rc);
+      if (pclose_rc != 0) exec::exit_status = EXIT_FAILURE;
 
-      int pclose_tok = pclose (yyin);
-      eprint_status (command.c_str(), pclose_tok);
+      int pclose_tok = fclose(lexer::tokOut);
+      eprint_status (tokfilename.c_str(), pclose_tok);
       if (pclose_tok != 0) exit_status = EXIT_FAILURE;
 
       //-------------------- dump the string set --------------------
@@ -110,9 +110,19 @@ int main (int argc, char** argv) {
          filemiddle.substr(0, filemiddle.length()-3) + astending;
       FILE* astFile = fopen(astfilename.c_str(), "w+");
       astree::print(astFile, parser::root);
-      int pclose_ast = fclose (strFile);
-      eprint_status (strfilename.c_str(), pclose_ast);
+      int pclose_ast = fclose (astFile);
+      eprint_status (astfilename.c_str(), pclose_ast);
       if (pclose_ast != 0) exit_status = EXIT_FAILURE;
+
+      //-------------------- dump the symbol table --------------------
+      string symfilename = filestart + 
+         filemiddle.substr(0, filemiddle.length()-3) + symending;
+      symFile = fopen(symfilename.c_str(), "w+");
+      run_attr(parser::root);
+      print_sym_table(parser::root);
+      int pclose_sym = fclose (symFile);
+      eprint_status (symfilename.c_str(), pclose_sym);
+      if (pclose_sym != 0) exit_status = EXIT_FAILURE;
 
    }
    return exit_status;
